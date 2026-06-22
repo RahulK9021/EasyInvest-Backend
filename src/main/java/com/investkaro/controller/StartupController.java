@@ -34,8 +34,10 @@ public class StartupController {
 
     @GetMapping
     public List<StartupResponse> getStartups(Authentication authentication){
-        String email = authentication.getName();
-        return startupService.getAllStartups(email);
+        if (authentication == null) {
+            return startupService.getAllStartups();
+        }
+        return startupService.getAllStartups(authentication.getName());
     }
 
     @GetMapping("progress/{startupId}")

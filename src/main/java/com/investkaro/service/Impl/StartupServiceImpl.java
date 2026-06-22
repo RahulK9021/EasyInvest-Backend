@@ -19,14 +19,28 @@ public class StartupServiceImpl implements StartupService {
     private final IndustryRepository industryRepository;
     private final InvestmentRepository investmentRepository;
     private final InterestRepository interestRepository;
+    private final BookmarkRepository bookmarkRepository;
+    private final FollowRepository followRepository;
+    private final StartupUpdateRepository startupUpdateRepository;
+    private final DocumentRepository documentRepository;
+    private final MeetingRepository meetingRepository;
+    private final MessageRepository messageRepository;
+    private final ConversationRepository conversationRepository;
 
-    public StartupServiceImpl(StartupRepository startupRepository, UserRepository userRepository, FounderRepository founderRepository, IndustryRepository industryRepository, InvestmentRepository investmentRepository, InterestRepository interestRepository) {
+    public StartupServiceImpl(StartupRepository startupRepository, UserRepository userRepository, FounderRepository founderRepository, IndustryRepository industryRepository, InvestmentRepository investmentRepository, InterestRepository interestRepository, BookmarkRepository bookmarkRepository, FollowRepository followRepository, StartupUpdateRepository startupUpdateRepository, DocumentRepository documentRepository, MeetingRepository meetingRepository, MessageRepository messageRepository, ConversationRepository conversationRepository) {
         this.startupRepository = startupRepository;
         this.userRepository = userRepository;
         this.founderRepository = founderRepository;
         this.industryRepository = industryRepository;
         this.investmentRepository = investmentRepository;
         this.interestRepository = interestRepository;
+        this.bookmarkRepository = bookmarkRepository;
+        this.followRepository = followRepository;
+        this.startupUpdateRepository = startupUpdateRepository;
+        this.documentRepository = documentRepository;
+        this.meetingRepository = meetingRepository;
+        this.messageRepository = messageRepository;
+        this.conversationRepository = conversationRepository;
     }
 
 
@@ -231,6 +245,13 @@ public class StartupServiceImpl implements StartupService {
         }
         interestRepository.deleteByStartupId(id);
         investmentRepository.deleteByStartupId(id);
+        bookmarkRepository.deleteByStartupId(id);
+        followRepository.deleteByStartupId(id);
+        startupUpdateRepository.deleteByStartupId(id);
+        documentRepository.deleteByStartupId(id);
+        meetingRepository.deleteByStartupId(id);
+        messageRepository.deleteByConversation_Startup_Id(id);
+        conversationRepository.deleteByStartupId(id);
         startupRepository.delete(startup);
     }
 
@@ -265,6 +286,7 @@ public class StartupServiceImpl implements StartupService {
             }
 
             return new FounderDashboardResponse(
+                    startup.getId(),
                     startup.getCompanyName(),
                     startup.getTotalFunding(),
                     startup.getAmountRequired(),

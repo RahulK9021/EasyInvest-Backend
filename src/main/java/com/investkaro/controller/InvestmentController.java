@@ -50,7 +50,7 @@ public class InvestmentController {
                 .orElseThrow(()-> new RuntimeException("Investor not found"));
 
         return ResponseEntity.ok(
-                investmentService.getInvestorDashboard(investor.getId())
+                investmentService.getInvestmentHistory(investor.getId())
         );
     }
 }

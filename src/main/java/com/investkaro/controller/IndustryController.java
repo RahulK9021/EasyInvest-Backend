@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/industries")
+@RequestMapping
 public class IndustryController {
     private final IndustryService industryService;
 
@@ -15,12 +15,12 @@ public class IndustryController {
         this.industryService = industryService;
     }
 
-    @PostMapping
+    @PostMapping("/admin/industries")
     public Industry createIndustry(@RequestParam String name){
         return industryService.createIndustry(name);
     }
 
-    @GetMapping
+    @GetMapping("/api/industries")
     public List<Industry> getAllIndustry(){
         return industryService.getAllIndustries();
     }

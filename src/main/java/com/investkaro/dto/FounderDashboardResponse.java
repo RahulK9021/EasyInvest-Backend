@@ -7,6 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class FounderDashboardResponse {
 
+    private Long startupId;
     private String companyName;
     private Double totalFunding;
     private Double amountRequired;

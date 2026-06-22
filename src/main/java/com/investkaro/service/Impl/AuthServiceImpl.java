@@ -12,6 +12,11 @@ import com.investkaro.security.JwtService;
 import com.investkaro.service.AuthService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -32,12 +37,30 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User register(RegisterRequest request) {
+        String email = request.getEmail() == null ? "" : request.getEmail().trim().toLowerCase();
+
+        if (email.isBlank()) {
+            throw new ResponseStatusException(BAD_REQUEST, "Email is required");
+        }
+
+        if (request.getPassword() == null || request.getPassword().trim().length() < 4) {
+            throw new ResponseStatusException(BAD_REQUEST, "Password must be at least 4 characters");
+        }
+
+        if (request.getRole() == null) {
+            throw new ResponseStatusException(BAD_REQUEST, "Role is required");
+        }
+
+        if (userRepository.existsByEmailIgnoreCase(email)) {
+            throw new ResponseStatusException(CONFLICT, "An account with this email already exists");
+        }
+
         User user = new User();
-        user.setFullName(request.getFullName());
-        user.setEmail(request.getEmail());
+        user.setFullName(request.getFullName() == null ? "" : request.getFullName().trim());
+        user.setEmail(email);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setPhone(request.getPhone());
-        user.setLocation(request.getLocation());
+        user.setPhone(request.getPhone() == null ? "" : request.getPhone().trim());
+        user.setLocation(request.getLocation() == null ? "" : request.getLocation().trim());
         user.setRole(request.getRole());
 
         User savedUser = userRepository.save(user);
@@ -62,9 +85,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String login(String email, String password) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        String normalizedEmail = email == null ? "" : email.trim().toLowerCase();
+
+        User user = userRepository.findByEmail(normalizedEmail)
+                .orElseThrow(() -> new ResponseStatusException(UNAUTHORIZED, "Invalid email or password"));
+
         if(!passwordEncoder.matches(password , user.getPassword())){
-            throw new RuntimeException("Invalid password");
+            throw new ResponseStatusException(UNAUTHORIZED, "Invalid email or password");
         }
         return jwtService.generateToken(user.getEmail(),user.getRole().name());
     }

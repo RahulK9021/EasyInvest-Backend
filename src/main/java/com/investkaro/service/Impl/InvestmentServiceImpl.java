@@ -1,6 +1,5 @@
 package com.investkaro.service.Impl;
 
-import com.investkaro.dto.FounderDashboardResponse;
 import com.investkaro.dto.InvestmentHistoryResponse;
 import com.investkaro.dto.InvestorDashboardResponse;
 import com.investkaro.entity.*;
@@ -88,6 +87,7 @@ public class InvestmentServiceImpl implements InvestmentService {
             );
         }
 
+    @Override
     public List<InvestmentHistoryResponse> getInvestmentHistory(Long investorId) {
         List<Investment> investments =
                 investmentRepository.findByInvestorIdOrderByCreatedAtDesc(investorId);
