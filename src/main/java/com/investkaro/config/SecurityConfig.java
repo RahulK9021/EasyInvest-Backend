@@ -23,11 +23,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .cors(cors -> {})
+                // 1. Tell Spring Security to use your custom global CorsConfig setup
+                .cors(cors -> cors.configure(http))
+
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // 2. EXPLICITLY ALLOW ALL HTTP OPTIONS PREFLIGHT REQUESTS
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/startups","/startups/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/industries","/api/test").permitAll()
