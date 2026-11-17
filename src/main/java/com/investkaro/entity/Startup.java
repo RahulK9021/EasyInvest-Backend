@@ -11,12 +11,11 @@ public class Startup {
     private Long id;
 
     private String companyName;
-
     private String businessModel;
 
-    private Integer foundedYear;
-
-    private Integer teamSize;
+    // Give them default values so they are never null from the DB/serialization
+    private Integer foundedYear = 0;
+    private Integer teamSize = 0;
 
     private String problem;
     private String solution;
@@ -24,15 +23,15 @@ public class Startup {
     private String usp;
     private String competitors;
 
-    private Double revenue;
-    private Double burnRate;
-    private Double cac;
-    private Double ltv;
-    private Double totalFunding;
+    private Double revenue = 0.0;
+    private Double burnRate = 0.0;
+    private Double cac = 0.0;
+    private Double ltv = 0.0;
+    private Double totalFunding = 0.0;
 
-    private Double amountRequired;
-    private Double equityOffered;
-    private Double valuation;
+    private Double amountRequired = 0.0;
+    private Double equityOffered = 0.0;
+    private Double valuation = 0.0;
 
     @ManyToOne
     @JoinColumn(name="founder_id")
