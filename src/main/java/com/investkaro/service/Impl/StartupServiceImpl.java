@@ -74,37 +74,36 @@ public class StartupServiceImpl implements StartupService {
         return startupRepository.save(startup);
     }
 
-    @Override
-    public List<StartupResponse> getAllStartups(String email) {
+   @Override
+public List<StartupResponse> getAllStartups(String email) {
+    List<Startup> startups = startupRepository.findAll();
 
-        List<Startup> startups = startupRepository.findAll();
-
-        return startups.stream()
-                .map(startup -> new StartupResponse(
-                        startup.getId(),
-                        startup.getCompanyName(),
-                        startup.getBusinessModel(),
-                        startup.getFoundedYear(),
-                        startup.getTeamSize(),
-                        startup.getProblem(),
-                        startup.getSolution(),
-                        startup.getTargetMarket(),
-                        startup.getUsp(),
-                        startup.getCompetitors(),
-                        startup.getRevenue(),
-                        startup.getBurnRate(),
-                        startup.getCac(),
-                        startup.getLtv(),
-                        startup.getTotalFunding(),
-                        startup.getAmountRequired(),
-                        startup.getEquityOffered(),
-                        startup.getValuation(),
-                        startup.getFounder().getUser().getFullName(),
-                        startup.getIndustry().getName()
-                ))
-                .toList();
-    }
-
+    return startups.stream()
+            .map(startup -> new StartupResponse(
+                    startup.getId(),
+                    startup.getCompanyName(),
+                    startup.getBusinessModel(),
+                    startup.getFoundedYear() != null ? startup.getFoundedYear() : 0,
+                    startup.getTeamSize() != null ? startup.getTeamSize() : 0,
+                    startup.getProblem(),
+                    startup.getSolution(),
+                    startup.getTargetMarket(),
+                    startup.getUsp(),
+                    startup.getCompetitors(),
+                    startup.getRevenue() != null ? startup.getRevenue() : 0.0,
+                    startup.getBurnRate() != null ? startup.getBurnRate() : 0.0,
+                    startup.getCac() != null ? startup.getCac() : 0.0,
+                    startup.getLtv() != null ? startup.getLtv() : 0.0,
+                    startup.getTotalFunding() != null ? startup.getTotalFunding() : 0.0,
+                    startup.getAmountRequired() != null ? startup.getAmountRequired() : 0.0,
+                    startup.getEquityOffered() != null ? startup.getEquityOffered() : 0.0,
+                    startup.getValuation() != null ? startup.getValuation() : 0.0,
+                    (startup.getFounder() != null && startup.getFounder().getUser() != null) 
+                        ? startup.getFounder().getUser().getFullName() : "N/A",
+                    startup.getIndustry() != null ? startup.getIndustry().getName() : "N/A"
+            ))
+            .toList();
+}
     @Override
     public List<StartupResponse> getAllStartups() {
 
